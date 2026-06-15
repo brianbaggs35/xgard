@@ -1,28 +1,31 @@
-// To see this message, add the following to the `<head>` section in your
-// views/layouts/application.html.erb
-//
-//    <%= vite_client_tag %>
-//    <%= vite_javascript_tag 'application' %>
-console.log('Vite ⚡️ Rails')
+import * as Turbo from '@hotwired/turbo-rails'
+import { createApp, type App, type Component } from 'vue'
+import PrimeVue from 'primevue/config'
+import Aura from '@primeuix/themes/aura'
 
-// If using a TypeScript entrypoint file:
-//     <%= vite_typescript_tag 'application' %>
-//
-// If you want to use .jsx or .tsx, add the extension:
-//     <%= vite_javascript_tag 'application.jsx' %>
+Turbo.start()
 
-console.log('Visit the guide for more information: ', 'https://vite-ruby.netlify.app/guide/rails')
+// Registry of all Vue components used in the app
+// We'll add components here as we build them
+const components: Record<string, Component> = {}
 
-// Example: Load Rails libraries in Vite.
-//
-// import * as Turbo from '@hotwired/turbo'
-// Turbo.start()
-//
-// import ActiveStorage from '@rails/activestorage'
-// ActiveStorage.start()
-//
-// // Import all channels.
-// const channels = import.meta.glob('./**/*_channel.js', { eager: true })
+// Finds every element with a data-vue-component attribute
+// and mounts the matching Vue component onto it
+function mountComponents(): void {
+  document.querySelectorAll('[data-vue-component]').forEach((el) => {
+    const name = (el as HTMLElement).dataset.vueComponent
+    if (!name || !components[name]) return
 
-// Example: Import a stylesheet in app/frontend/index.css
-// import '~/index.css'
+    const app: App = createApp(components[name])
+    app.use(PrimeVue, {
+      theme: {
+        preset: Aura,
+        options: { darkModeSelector: '.dark' },
+      },
+    })
+    app.mount(el)
+  })
+}
+
+document.addEventListener('DOMContentLoaded', mountComponents)
+document.addEventListener('turbo:load', mountComponents)
