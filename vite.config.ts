@@ -13,6 +13,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
+      include: ['app/javascript/**/*.{ts,vue}'],
+      exclude: ['app/javascript/**/*.spec.ts', 'app/javascript/**/*.d.ts', 'app/javascript/entrypoints/application.ts'],
     },
   },
 })
