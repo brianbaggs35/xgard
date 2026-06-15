@@ -91,6 +91,18 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Build Vite assets
+        run: bin/vite build
+
       - name: Run tests
         env:
           RAILS_ENV: test
@@ -98,3 +110,24 @@ jobs:
         run: |
           bin/rails db:test:prepare
           bundle exec rspec
+
+  js-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Run Vitest
+        run: npm run test:run
+
+      - name: Run Vitest coverage
+        run: npm run test:coverage
