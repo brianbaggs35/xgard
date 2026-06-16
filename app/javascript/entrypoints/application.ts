@@ -1,9 +1,7 @@
-import * as Turbo from '@hotwired/turbo-rails'
+import '@hotwired/turbo-rails'
 import { createApp, type App, type Component } from 'vue'
 import PrimeVue from 'primevue/config'
 import Aura from '@primeuix/themes/aura'
-
-Turbo.start()
 
 // Registry of all Vue components used in the app
 // We'll add components here as we build them
